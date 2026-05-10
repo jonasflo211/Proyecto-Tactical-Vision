@@ -1,0 +1,33 @@
+# Build artifacts
+build*/
+out/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+
+# Binaries and generated media
+*.exe
+*.dll
+*.lib
+*.obj
+*.pdb
+*.ilk
+*.avi
+*.mp4
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Local datasets and model outputs
+dataset/positives/
+dataset/negatives/
+external/
+*.onnx
+*.yml
+*.csv
+dataset/eval_frames/

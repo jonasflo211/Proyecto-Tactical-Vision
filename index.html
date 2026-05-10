@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Landing page académica para un sistema de análisis táctico de fútbol con visión por computador clásica.">
+  <title>Análisis Táctico de Fútbol | Visión por Computador Clásica</title>
+  <style>
+    :root {
+      --bg: #07100f;
+      --bg-soft: #0d1a1b;
+      --panel: rgba(15, 29, 31, 0.82);
+      --panel-strong: #102324;
+      --line: rgba(148, 255, 213, 0.18);
+      --text: #edf8f5;
+      --muted: #a8bbb8;
+      --green: #39f59d;
+      --green-soft: rgba(57, 245, 157, 0.14);
+      --blue: #43c8ff;
+      --blue-soft: rgba(67, 200, 255, 0.14);
+      --white-soft: rgba(255, 255, 255, 0.08);
+      --danger: #ff708d;
+      --warning: #ffd166;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.36);
+      --radius: 8px;
+      --max-width: 1180px;
+      --nav-height: 74px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(67, 200, 255, 0.14), transparent 30%),
+        radial-gradient(circle at 85% 5%, rgba(57, 245, 157, 0.13), transparent 28%),
+        linear-gradient(180deg, #061110 0%, #091314 42%, #050909 100%);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+      background-size: 56px 56px;
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), transparent 78%);
+      z-index: -1;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page-shell {
+      width: min(100% - 40px, var(--max-width));
+      margin: 0 auto;
+    }
+
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      height: var(--nav-height);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(6, 14, 14, 0.78);
+      backdrop-filter: blur(18px);
+    }
+
+    .nav-inner {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(57, 245, 157, 0.4);
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(57, 245, 157, 0.2), rgba(67, 200, 255, 0.12));
+      box-shadow: 0 0 28px rgba(57, 245, 157, 0.16);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .nav-links a {
+      padding: 9px 12px;
+      border-radius: 8px;
+      transition: color 180ms ease, background 180ms ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .menu-toggle {
+      display: none;
+      width: 42px;
+      height: 42px;
+      color: var(--text);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white-soft);
+      cursor: pointer;
+    }
+
+    .section {
+      padding: 92px 0;
+      scroll-margin-top: var(--nav-height);
+    }
+
+    .hero {
+      min-height: 100vh;
+      padding: calc(var(--nav-height) + 56px) 0 80px;
+      display: grid;
+      align-items: center;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(360px, 0.92fr);
+      gap: 48px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: #c7fff0;
+      background: rgba(57, 245, 157, 0.08);
+      font-size: 0.87rem;
+      font-weight: 700;
+    }
+
+    h1,
+    h2,
+    h3 {
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    h1 {
+      max-width: 760px;
+      font-size: clamp(2.7rem, 6vw, 5.8rem);
+      margin-bottom: 22px;
+    }
+
+    h2 {
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      margin-bottom: 16px;
+    }
+
+    h3 {
+      font-size: 1.08rem;
+      margin-bottom: 10px;
+    }
+
+    .gradient-text {
+      color: transparent;
+      background: linear-gradient(110deg, var(--green), #d8fff3 45%, var(--blue));
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+
+    .lead {
+      max-width: 680px;
+      color: var(--muted);
+      font-size: clamp(1.02rem, 2vw, 1.2rem);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 34px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 48px;
+      padding: 0 18px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      font-weight: 800;
+      transition: transform 180ms ease, box-shadow 180ms ease, border 180ms ease, background 180ms ease;
+    }
+
+    .btn-primary {
+      color: #04100d;
+      background: linear-gradient(135deg, var(--green), #9dffe0);
+      box-shadow: 0 18px 42px rgba(57, 245, 157, 0.22);
+    }
+
+    .btn-secondary {
+      color: var(--text);
+      border-color: var(--line);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .section-head {
+      max-width: 760px;
+      margin-bottom: 34px;
+    }
+
+    .section-head.center {
+      margin-inline: auto;
+      text-align: center;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .hero-visual,
+    .demo-panel,
+    .card,
+    .restriction-box,
+    .pipeline-wrap {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.035));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .hero-visual {
+      position: relative;
+      min-height: 470px;
+      padding: 18px;
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .visual-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .status-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      margin-right: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 16px var(--green);
+    }
+
+    .field {
+      position: relative;
+      min-height: 380px;
+      border: 2px solid rgba(202, 255, 232, 0.42);
+      border-radius: 8px;
+      overflow: hidden;
+      background:
+        repeating-linear-gradient(90deg, rgba(30, 110, 72, 0.32) 0 12.5%, rgba(25, 91, 67, 0.32) 12.5% 25%),
+        linear-gradient(135deg, rgba(57, 245, 157, 0.17), rgba(67, 200, 255, 0.12));
+    }
+
+    .field::before,
+    .field::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .field::before {
+      inset: 0 50% 0 auto;
+      width: 2px;
+      background: rgba(232, 255, 248, 0.52);
+    }
+
+    .field::after {
+      width: 94px;
+      height: 94px;
+      left: 50%;
+      top: 50%;
+      border: 2px solid rgba(232, 255, 248, 0.44);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .box {
+      position: absolute;
+      top: 25%;
+      width: 15%;
+      height: 50%;
+      border: 2px solid rgba(232, 255, 248, 0.42);
+    }
+
+    .box.left {
+      left: 0;
+      border-left: 0;
+    }
+
+    .box.right {
+      right: 0;
+      border-right: 0;
+    }
+
+    .player,
+    .ball {
+      position: absolute;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 3;
+    }
+
+    .player {
+      width: 22px;
+      height: 22px;
+      border: 2px solid rgba(255, 255, 255, 0.84);
+      box-shadow: 0 0 18px rgba(0, 0, 0, 0.34);
+      animation: floatPlayer 4s ease-in-out infinite;
+    }
+
+    .team-a {
+      background: var(--green);
+    }
+
+    .team-b {
+      background: var(--blue);
+    }
+
+    .ball {
+      width: 13px;
+      height: 13px;
+      background: #f8fff9;
+      box-shadow: 0 0 18px rgba(255, 255, 255, 0.7);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .pass-line {
+      position: absolute;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(57, 245, 157, 0.15), rgba(57, 245, 157, 0.9));
+      transform-origin: left center;
+      z-index: 2;
+      box-shadow: 0 0 14px rgba(57, 245, 157, 0.4);
+    }
+
+    .attack-zone {
+      position: absolute;
+      right: 18%;
+      top: 20%;
+      width: 20%;
+      height: 48%;
+      border: 1px solid rgba(255, 209, 102, 0.72);
+      border-radius: 8px;
+      background: rgba(255, 209, 102, 0.14);
+      box-shadow: inset 0 0 30px rgba(255, 209, 102, 0.11);
+      z-index: 1;
+      animation: zoneGlow 2.8s ease-in-out infinite;
+    }
+
+    .mini-stats {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 18px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      z-index: 4;
+    }
+
+    .mini-stat {
+      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      border-radius: 8px;
+      background: rgba(5, 12, 12, 0.66);
+    }
+
+    .mini-stat strong {
+      display: block;
+      color: var(--text);
+      font-size: 1.15rem;
+    }
+
+    .mini-stat span {
+      color: var(--muted);
+      font-size: 0.76rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+      align-items: start;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      min-height: 100%;
+      padding: 22px;
+      border-radius: var(--radius);
+      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(57, 245, 157, 0.42);
+      background: linear-gradient(180deg, rgba(57, 245, 157, 0.09), rgba(255, 255, 255, 0.04));
+    }
+
+    .icon {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--green);
+      background: var(--green-soft);
+      font-weight: 900;
+    }
+
+    .pipeline-wrap {
+      padding: 24px;
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .pipeline {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(120px, 1fr));
+      gap: 12px;
+    }
+
+    .step {
+      position: relative;
+      min-height: 92px;
+      padding: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      background: rgba(5, 14, 14, 0.58);
+    }
+
+    .step::after {
+      content: "->";
+      position: absolute;
+      top: 50%;
+      right: -12px;
+      color: var(--green);
+      transform: translate(50%, -50%);
+      font-weight: 900;
+      z-index: 2;
+    }
+
+    .step:last-child::after {
+      content: "";
+    }
+
+    .step-number {
+      display: inline-flex;
+      margin-bottom: 12px;
+      color: var(--green);
+      font-size: 0.78rem;
+      font-weight: 900;
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .video-compare {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .video-card {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius);
+      background: rgba(5, 14, 14, 0.72);
+      box-shadow: var(--shadow);
+    }
+
+    .video-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 16px 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .video-card-header span {
+      color: var(--muted);
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    .video-frame {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      background:
+        linear-gradient(135deg, rgba(57, 245, 157, 0.08), rgba(67, 200, 255, 0.08)),
+        #030807;
+    }
+
+    .video-frame video {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: contain;
+      background: #020605;
+    }
+
+    .video-label {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      z-index: 2;
+      padding: 7px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      border-radius: 999px;
+      color: #eafff8;
+      background: rgba(5, 14, 14, 0.76);
+      font-size: 0.75rem;
+      font-weight: 900;
+    }
+
+    .video-note {
+      padding: 14px 18px 18px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .video-fallback {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 0 18px 18px;
+    }
+
+    .video-fallback a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 38px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: #dffcf4;
+      background: rgba(57, 245, 157, 0.08);
+      font-size: 0.86rem;
+      font-weight: 800;
+      transition: transform 180ms ease, border-color 180ms ease;
+    }
+
+    .video-fallback a:hover {
+      transform: translateY(-2px);
+      border-color: rgba(57, 245, 157, 0.48);
+    }
+
+    .demo-panel {
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .demo-field {
+      min-height: 520px;
+      border: 0;
+      border-radius: 0;
+    }
+
+    .simulation-hud {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      right: 16px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    .hud-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 11px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 999px;
+      color: #eafff8;
+      background: rgba(5, 14, 14, 0.72);
+      font-size: 0.78rem;
+      font-weight: 800;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+    }
+
+    .scan-line {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(180deg, transparent, rgba(67, 200, 255, 0.95), transparent);
+      box-shadow: 0 0 20px rgba(67, 200, 255, 0.68);
+      animation: scanField 5.5s linear infinite;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .heat-zone {
+      position: absolute;
+      left: 52%;
+      top: 42%;
+      width: 22%;
+      height: 28%;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(57, 245, 157, 0.34), rgba(57, 245, 157, 0.02) 66%, transparent 70%);
+      filter: blur(2px);
+      animation: heatPulse 3.2s ease-in-out infinite;
+      z-index: 1;
+    }
+
+    .moving-a1 { animation: moveA1 8s ease-in-out infinite; }
+    .moving-a2 { animation: moveA2 7s ease-in-out infinite; }
+    .moving-a3 { animation: moveA3 7.5s ease-in-out infinite; }
+    .moving-a4 { animation: moveA4 8.5s ease-in-out infinite; }
+    .moving-a5 { animation: moveA5 7.8s ease-in-out infinite; }
+    .moving-b1 { animation: moveB1 8s ease-in-out infinite; }
+    .moving-b2 { animation: moveB2 7.4s ease-in-out infinite; }
+    .moving-b3 { animation: moveB3 8.2s ease-in-out infinite; }
+    .moving-b4 { animation: moveB4 7.8s ease-in-out infinite; }
+    .moving-ball { animation: moveBall 5.2s ease-in-out infinite; }
+
+    .metric-panel {
+      padding: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius);
+      background: rgba(5, 14, 14, 0.72);
+      box-shadow: var(--shadow);
+    }
+
+    .metric {
+      padding: 15px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .metric:last-child {
+      border-bottom: 0;
+    }
+
+    .metric-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .metric-label {
+      color: var(--muted);
+      font-size: 0.91rem;
+    }
+
+    .metric-value {
+      font-weight: 900;
+    }
+
+    .bar {
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.09);
+      overflow: hidden;
+    }
+
+    .bar span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--green), var(--blue));
+    }
+
+    .restrictions {
+      display: grid;
+      grid-template-columns: 0.75fr 1.25fr;
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .restriction-box {
+      padding: 26px;
+      border-radius: var(--radius);
+    }
+
+    .no-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .no-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 14px;
+      border: 1px solid rgba(255, 112, 141, 0.22);
+      border-radius: 8px;
+      background: rgba(255, 112, 141, 0.07);
+    }
+
+    .yes-item {
+      border-color: rgba(57, 245, 157, 0.22);
+      background: rgba(57, 245, 157, 0.07);
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .chip {
+      padding: 9px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+      color: #dffcf4;
+      background: rgba(255, 255, 255, 0.055);
+      font-size: 0.9rem;
+      font-weight: 700;
+      transition: transform 180ms ease, border-color 180ms ease;
+    }
+
+    .chip:hover {
+      transform: translateY(-2px);
+      border-color: rgba(67, 200, 255, 0.45);
+    }
+
+    .conclusion {
+      padding: 56px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      text-align: center;
+      background:
+        linear-gradient(135deg, rgba(57, 245, 157, 0.16), rgba(67, 200, 255, 0.11)),
+        rgba(255, 255, 255, 0.04);
+      box-shadow: var(--shadow);
+    }
+
+    .conclusion p {
+      max-width: 860px;
+      margin: 0 auto;
+      font-size: clamp(1.35rem, 3vw, 2.35rem);
+      line-height: 1.22;
+      font-weight: 900;
+    }
+
+    .footer {
+      padding: 32px 0 48px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 600ms ease, transform 600ms ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes floatPlayer {
+      0%, 100% {
+        margin-top: 0;
+      }
+      50% {
+        margin-top: -7px;
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.22);
+      }
+    }
+
+    @keyframes zoneGlow {
+      0%, 100% {
+        opacity: 0.65;
+      }
+      50% {
+        opacity: 1;
+      }
+    }
+
+    @keyframes scanField {
+      0% { left: 8%; opacity: 0; }
+      12% { opacity: 1; }
+      88% { opacity: 1; }
+      100% { left: 92%; opacity: 0; }
+    }
+
+    @keyframes heatPulse {
+      0%, 100% { opacity: 0.48; transform: scale(0.92); }
+      50% { opacity: 0.9; transform: scale(1.08); }
+    }
+
+    @keyframes moveA1 {
+      0%, 100% { left: 23%; top: 49%; transform: translate(-50%, -50%); }
+      45% { left: 31%; top: 45%; transform: translate(-50%, -50%); }
+      72% { left: 36%; top: 53%; transform: translate(-50%, -50%); }
+    }
+
+    @keyframes moveA2 {
+      0%, 100% { left: 35%; top: 61%; transform: translate(-50%, -50%); }
+      50% { left: 45%; top: 63%; transform: translate(-50%, -50%); }
+    }
+
+    @keyframes moveA3 {
+      0%, 100% { left: 43%; top: 37%; transform: translate(-50%, -50%); }
+      46% { left: 52%; top: 34%; transform: translate(-50%, -50%); }
+      78% { left: 57%; top: 41%; transform: translate(-50%, -50%); }
+    }
+
+    @keyframes moveA4 {
+      0%, 100% { left: 58%; top: 52%; transform: translate(-50%, -50%); }
+      45% { left: 66%; top: 48%; transform: translate(-50%, -50%); }
+    }
+
+    @keyframes moveA5 {
+      0%, 100% { left: 68%; top: 30%; transform: translate(-50%, -50%); }
+      50% { left: 74%; top: 34%; transform: translate(-50%, -50%); }
+    }
+
+    @keyframes moveB1 {
+      0%, 100% { left: 46%; top: 55%; transform: translate(-50%, -50%); }
+      48% { left: 52%; top: 58%; transform: translate(-50%, -50%); }
+    }
+
+    @keyframes moveB2 {
+      0%, 100% { left: 58%; top: 40%; transform: translate(-50%, -50%); }
+      50% { left: 63%; top: 44%; transform: translate(-50%, -50%); }
+    }
+
+    @keyframes moveB3 {
+      0%, 100% { left: 71%; top: 55%; transform: translate(-50%, -50%); }
+      48% { left: 76%; top: 51%; transform: translate(-50%, -50%); }
+    }
+
+    @keyframes moveB4 {
+      0%, 100% { left: 79%; top: 40%; transform: translate(-50%, -50%); }
+      50% { left: 82%; top: 46%; transform: translate(-50%, -50%); }
+    }
+
+    @keyframes moveBall {
+      0%, 100% { left: 36%; top: 51%; transform: translate(-50%, -50%) scale(1); }
+      35% { left: 48%; top: 40%; transform: translate(-50%, -50%) scale(1.2); }
+      68% { left: 61%; top: 51%; transform: translate(-50%, -50%) scale(1); }
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .grid-2,
+      .demo-grid,
+      .video-compare,
+      .restrictions {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: auto;
+      }
+
+      .cards-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .pipeline {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .step::after {
+        content: "";
+      }
+    }
+
+    @media (max-width: 760px) {
+      :root {
+        --nav-height: 66px;
+      }
+
+      .page-shell {
+        width: min(100% - 28px, var(--max-width));
+      }
+
+      .menu-toggle {
+        display: grid;
+        place-items: center;
+      }
+
+      .nav-links {
+        position: absolute;
+        top: var(--nav-height);
+        left: 14px;
+        right: 14px;
+        display: none;
+        flex-direction: column;
+        align-items: stretch;
+        padding: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        background: rgba(6, 14, 14, 0.96);
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+
+      .nav-links a {
+        width: 100%;
+      }
+
+      .section {
+        padding: 68px 0;
+      }
+
+      .hero {
+        padding-top: calc(var(--nav-height) + 36px);
+      }
+
+      .hero-visual {
+        min-height: 390px;
+      }
+
+      .field {
+        min-height: 310px;
+      }
+
+      .demo-field {
+        min-height: 420px;
+      }
+
+      .mini-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .cards-grid,
+      .pipeline {
+        grid-template-columns: 1fr;
+      }
+
+      .conclusion {
+        padding: 34px 20px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <nav class="nav-inner page-shell" aria-label="Navegación principal">
+      <a class="brand" href="#inicio" aria-label="Ir al inicio">
+        <span class="brand-mark">FC</span>
+        <span>Tactical Vision</span>
+      </a>
+      <button class="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false">☰</button>
+      <div class="nav-links" id="navLinks">
+        <a href="#problema">Problema</a>
+        <a href="#solucion">Solución</a>
+        <a href="#pipeline">Pipeline</a>
+        <a href="#demo">Demo</a>
+        <a href="#videos">Videos</a>
+        <a href="#analisis">Análisis</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="inicio">
+      <div class="page-shell hero-grid">
+        <div class="reveal">
+          <span class="eyebrow"><span class="status-dot"></span> Visión por computador clásica aplicada al fútbol</span>
+          <h1>Análisis táctico explicable para <span class="gradient-text">decisiones deportivas</span></h1>
+          <p class="lead">Sistema académico que analiza videos o imágenes de partidos usando OpenCV, segmentación por color, contornos, tracking, homografía y métricas tácticas sin depender de YOLO ni modelos preentrenados.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#demo">Ver funcionamiento</a>
+            <a class="btn btn-secondary" href="#analisis">Análisis táctico</a>
+          </div>
+        </div>
+
+        <div class="hero-visual reveal" aria-label="Simulación visual de cancha con jugadores detectados">
+          <div class="visual-toolbar">
+            <span><span class="status-dot"></span>Demo académica simulada</span>
+            <span>OpenCV + Homografía</span>
+          </div>
+          <div class="field">
+            <span class="box left"></span>
+            <span class="box right"></span>
+            <span class="attack-zone"></span>
+            <span class="pass-line" style="left: 37%; top: 51%; width: 120px; transform: rotate(-20deg);"></span>
+            <span class="pass-line" style="left: 50%; top: 39%; width: 145px; transform: rotate(18deg);"></span>
+            <span class="player team-a" style="left: 30%; top: 58%;"></span>
+            <span class="player team-a" style="left: 42%; top: 45%; animation-delay: 0.3s;"></span>
+            <span class="player team-a" style="left: 56%; top: 34%; animation-delay: 0.7s;"></span>
+            <span class="player team-a" style="left: 64%; top: 61%; animation-delay: 1s;"></span>
+            <span class="player team-b" style="left: 51%; top: 56%; animation-delay: 0.5s;"></span>
+            <span class="player team-b" style="left: 68%; top: 42%; animation-delay: 0.9s;"></span>
+            <span class="player team-b" style="left: 75%; top: 62%; animation-delay: 0.2s;"></span>
+            <span class="ball" style="left: 43%; top: 49%;"></span>
+          </div>
+          <div class="mini-stats">
+            <div class="mini-stat"><strong>22</strong><span>jugadores detectados</span></div>
+            <div class="mini-stat"><strong>7</strong><span>líneas abiertas</span></div>
+            <div class="mini-stat"><strong>Alta</strong><span>zona de ataque</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="problema">
+      <div class="page-shell grid-2">
+        <div class="section-head reveal">
+          <span class="eyebrow">01 · Problema</span>
+          <h2>Convertir video deportivo en lectura táctica no es trivial.</h2>
+        </div>
+        <div class="card reveal">
+          <p class="muted">El análisis de fútbol requiere detectar jugadores, separar equipos, seguir movimientos y traducir posiciones de cámara a una cancha 2D. En un contexto académico, además, la solución debe ser auditable, modificable y comprensible. Por eso este proyecto prioriza una aproximación explicable con técnicas clásicas de visión por computador, sin modelos preentrenados ni detectores deep learning.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="solucion">
+      <div class="page-shell">
+        <div class="section-head center reveal">
+          <span class="eyebrow">02 · Solución propuesta</span>
+          <h2>Un sistema táctico basado en OpenCV y reglas visuales interpretables.</h2>
+          <p class="muted">Cada módulo transforma señales visuales simples en información deportiva: primero se segmenta, luego se filtra, se rastrea, se proyecta y finalmente se interpreta tácticamente.</p>
+        </div>
+        <div class="cards-grid">
+          <article class="card reveal">
+            <div class="icon">01</div>
+            <h3>Detección manual</h3>
+            <p class="muted">Segmentación de jugadores mediante máscara de cancha, HSV, sustracción de fondo, contornos y filtros geométricos.</p>
+          </article>
+          <article class="card reveal">
+            <div class="icon">02</div>
+            <h3>Tracking</h3>
+            <p class="muted">Seguimiento temporal de jugadores para conservar identidad, trayectorias y comportamiento por fase de juego.</p>
+          </article>
+          <article class="card reveal">
+            <div class="icon">03</div>
+            <h3>Homografía</h3>
+            <p class="muted">Proyección de coordenadas desde la cámara hacia una cancha 2D para construir el minimapa táctico.</p>
+          </article>
+          <article class="card reveal">
+            <div class="icon">04</div>
+            <h3>Análisis táctico</h3>
+            <p class="muted">Cálculo de compactación, amplitud, profundidad, líneas de pase, zonas libres y control espacial.</p>
+          </article>
+          <article class="card reveal">
+            <div class="icon">05</div>
+            <h3>Recomendaciones</h3>
+            <p class="muted">Strategy Advisor que convierte métricas espaciales en sugerencias ofensivas y defensivas.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="pipeline">
+      <div class="page-shell">
+        <div class="section-head reveal">
+          <span class="eyebrow">03 · Pipeline del sistema</span>
+          <h2>Del video crudo a la recomendación estratégica.</h2>
+        </div>
+        <div class="pipeline-wrap reveal">
+          <div class="pipeline">
+            <div class="step"><span class="step-number">01</span><h3>Video / Imagen</h3></div>
+            <div class="step"><span class="step-number">02</span><h3>Máscara de cancha</h3></div>
+            <div class="step"><span class="step-number">03</span><h3>Sustracción de fondo</h3></div>
+            <div class="step"><span class="step-number">04</span><h3>Contornos</h3></div>
+            <div class="step"><span class="step-number">05</span><h3>Filtros manuales</h3></div>
+            <div class="step"><span class="step-number">06</span><h3>Tracking</h3></div>
+            <div class="step"><span class="step-number">07</span><h3>Homografía</h3></div>
+            <div class="step"><span class="step-number">08</span><h3>Análisis táctico</h3></div>
+            <div class="step"><span class="step-number">09</span><h3>Recomendaciones</h3></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="modulos">
+      <div class="page-shell">
+        <div class="section-head center reveal">
+          <span class="eyebrow">04 · Módulos principales</span>
+          <h2>Componentes que conectan visión, geometría y táctica.</h2>
+        </div>
+        <div class="cards-grid">
+          <article class="card reveal"><div class="icon">◈</div><h3>Detección manual de jugadores</h3><p class="muted">Extracción explicable mediante operaciones de OpenCV y filtros ajustables.</p></article>
+          <article class="card reveal"><div class="icon">HSV</div><h3>Clasificación por equipo</h3><p class="muted">Separación por rangos de color para reconocer camisetas y equipos.</p></article>
+          <article class="card reveal"><div class="icon">ID</div><h3>Tracking de jugadores</h3><p class="muted">Asignación de identidades y trayectorias a través de frames.</p></article>
+          <article class="card reveal"><div class="icon">2D</div><h3>Homografía a cancha 2D</h3><p class="muted">Transformación de perspectiva para análisis espacial superior.</p></article>
+          <article class="card reveal"><div class="icon">MAP</div><h3>Minimapa táctico</h3><p class="muted">Representación reducida y legible de posiciones y dinámica colectiva.</p></article>
+          <article class="card reveal"><div class="icon">HOT</div><h3>Mapas de calor</h3><p class="muted">Densidad de ocupación por jugador, equipo o zona del campo.</p></article>
+          <article class="card reveal"><div class="icon">↗</div><h3>Líneas de pase</h3><p class="muted">Estimación de conexiones posibles según distancia, orientación y oposición.</p></article>
+          <article class="card reveal"><div class="icon">□</div><h3>Control de espacios</h3><p class="muted">Evaluación de zonas ocupadas, libres, vulnerables o dominadas.</p></article>
+          <article class="card reveal"><div class="icon">AI</div><h3>Strategy Advisor</h3><p class="muted">Motor de reglas tácticas para sugerir presión, amplitud o progresión.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="demo">
+      <div class="page-shell">
+        <div class="section-head reveal">
+          <span class="eyebrow">05 · Demo visual</span>
+          <h2>Simulación táctica en cancha CSS.</h2>
+          <p class="muted">La demo representa jugadores, balón, líneas de pase y una zona recomendada de ataque a partir de métricas tácticas de ejemplo.</p>
+        </div>
+        <div class="demo-grid">
+          <div class="demo-panel reveal">
+            <div class="field demo-field">
+              <div class="simulation-hud">
+                <span class="hud-pill"><span class="status-dot"></span>Simulación en vivo</span>
+                <span class="hud-pill" id="frameCounter">Frame 0248</span>
+              </div>
+              <span class="box left"></span>
+              <span class="box right"></span>
+              <span class="scan-line"></span>
+              <span class="heat-zone"></span>
+              <span class="attack-zone"></span>
+              <span class="pass-line" style="left: 34%; top: 48%; width: 180px; transform: rotate(-17deg);"></span>
+              <span class="pass-line" style="left: 45%; top: 37%; width: 150px; transform: rotate(28deg);"></span>
+              <span class="pass-line" style="left: 48%; top: 59%; width: 120px; transform: rotate(-8deg);"></span>
+              <span class="player team-a moving-a1"></span>
+              <span class="player team-a moving-a2"></span>
+              <span class="player team-a moving-a3"></span>
+              <span class="player team-a moving-a4"></span>
+              <span class="player team-a moving-a5"></span>
+              <span class="player team-b moving-b1"></span>
+              <span class="player team-b moving-b2"></span>
+              <span class="player team-b moving-b3"></span>
+              <span class="player team-b moving-b4"></span>
+              <span class="ball moving-ball"></span>
+            </div>
+          </div>
+
+          <aside class="metric-panel reveal" aria-label="Métricas tácticas de ejemplo">
+            <h3>Panel de métricas</h3>
+            <div class="metric">
+              <div class="metric-row"><span class="metric-label">Jugadores detectados</span><span class="metric-value">22</span></div>
+              <div class="bar"><span style="width: 100%;"></span></div>
+            </div>
+            <div class="metric">
+              <div class="metric-row"><span class="metric-label">Compactación del equipo</span><span class="metric-value">74%</span></div>
+              <div class="bar"><span style="width: 74%;"></span></div>
+            </div>
+            <div class="metric">
+              <div class="metric-row"><span class="metric-label">Líneas de pase abiertas</span><span class="metric-value">7</span></div>
+              <div class="bar"><span style="width: 70%;"></span></div>
+            </div>
+            <div class="metric">
+              <div class="metric-row"><span class="metric-label">Zona recomendada</span><span class="metric-value">Carril derecho</span></div>
+              <div class="bar"><span style="width: 82%;"></span></div>
+            </div>
+            <div class="metric">
+              <div class="metric-row"><span class="metric-label">Riesgo defensivo</span><span class="metric-value">Medio</span></div>
+              <div class="bar"><span style="width: 48%;"></span></div>
+            </div>
+            <div class="metric">
+              <div class="metric-row"><span class="metric-label">Control de espacios</span><span class="metric-value">67%</span></div>
+              <div class="bar"><span style="width: 67%;"></span></div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="videos">
+      <div class="page-shell">
+        <div class="section-head center reveal">
+          <span class="eyebrow">06 · Módulo de detección</span>
+          <h2>Video de entrada y resultado procesado.</h2>
+          <p class="muted">Comparación directa entre el material original del partido y la salida generada por el sistema de detección manual con OpenCV.</p>
+        </div>
+
+        <div class="video-compare">
+          <article class="video-card reveal">
+            <div class="video-card-header">
+              <h3>Entrada original</h3>
+              <span>input.mp4</span>
+            </div>
+            <div class="video-frame">
+              <span class="video-label">Video / Imagen fuente</span>
+              <video controls muted preload="metadata">
+                <source src="input.mp4" type="video/mp4">
+                Tu navegador no puede reproducir este video.
+              </video>
+            </div>
+            <p class="video-note">Material base usado para aplicar máscara de cancha, segmentación por color, sustracción de fondo y extracción de contornos.</p>
+          </article>
+
+          <article class="video-card reveal">
+            <div class="video-card-header">
+              <h3>Salida del sistema</h3>
+              <span>output_web.mp4</span>
+            </div>
+            <div class="video-frame">
+              <span class="video-label">Resultado procesado</span>
+              <video controls muted preload="metadata">
+                <source src="output_web.mp4" type="video/mp4">
+                <source src="output.mp4" type="video/mp4">
+                <source src="build_vcpkg/Release/output.mp4" type="video/mp4">
+                Tu navegador no puede reproducir este video.
+              </video>
+            </div>
+            <p class="video-note">Resultado visual del módulo de detección convertido a MP4 H.264 para reproducirse correctamente dentro del navegador.</p>
+            <div class="video-fallback" aria-label="Opciones para abrir el video de salida">
+              <a href="output_web.mp4" target="_blank" rel="noopener">Abrir MP4 web</a>
+              <a href="output.avi" target="_blank" rel="noopener">Abrir AVI</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="restricciones">
+      <div class="page-shell restrictions">
+        <div class="restriction-box reveal">
+          <span class="eyebrow">07 · Restricciones académicas</span>
+          <h2>Diseñado para ser explicable.</h2>
+          <p class="muted">El valor del proyecto está en mostrar cómo una cadena clásica de visión por computador puede producir información táctica verificable y defendible.</p>
+        </div>
+        <div class="no-list reveal">
+          <div class="no-item"><strong>✕</strong><span>No se usa YOLO.</span></div>
+          <div class="no-item"><strong>✕</strong><span>No se usan modelos preentrenados.</span></div>
+          <div class="no-item"><strong>✕</strong><span>No se usan detectores deep learning.</span></div>
+          <div class="no-item yes-item"><strong>✓</strong><span>La detección es manual, ajustable y explicable.</span></div>
+          <div class="no-item yes-item"><strong>✓</strong><span>Los datasets externos solo se usan como apoyo, no como modelos.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="analisis">
+      <div class="page-shell">
+        <div class="section-head center reveal">
+          <span class="eyebrow">08 · Análisis táctico</span>
+          <h2>Lecturas que ayudan a entender el juego.</h2>
+        </div>
+        <div class="cards-grid">
+          <article class="card reveal"><div class="icon">🔥</div><h3>Mapas de calor</h3><p class="muted">Zonas de mayor ocupación e influencia por jugador o equipo.</p></article>
+          <article class="card reveal"><div class="icon">↝</div><h3>Trayectorias</h3><p class="muted">Secuencia de movimiento para estudiar apoyos, desmarques y retornos.</p></article>
+          <article class="card reveal"><div class="icon">⟷</div><h3>Líneas de pase</h3><p class="muted">Conexiones abiertas entre compañeros y rutas de progresión.</p></article>
+          <article class="card reveal"><div class="icon">▦</div><h3>Compactación</h3><p class="muted">Distancias colectivas para medir bloque defensivo u ofensivo.</p></article>
+          <article class="card reveal"><div class="icon">↕</div><h3>Amplitud y profundidad</h3><p class="muted">Uso del ancho y largo del campo para atacar o defender.</p></article>
+          <article class="card reveal"><div class="icon">○</div><h3>Zonas libres</h3><p class="muted">Espacios disponibles para recibir, progresar o finalizar.</p></article>
+          <article class="card reveal"><div class="icon">◇</div><h3>Control de espacios</h3><p class="muted">Dominio territorial estimado con distancias y geometría espacial.</p></article>
+          <article class="card reveal"><div class="icon">⚑</div><h3>Recomendaciones estratégicas</h3><p class="muted">Sugerencias interpretables para orientar acciones tácticas.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="tecnologias">
+      <div class="page-shell">
+        <div class="section-head reveal">
+          <span class="eyebrow">09 · Tecnologías usadas</span>
+          <h2>Stack técnico del prototipo.</h2>
+        </div>
+        <div class="chips reveal" aria-label="Tecnologías usadas">
+          <span class="chip">C++</span>
+          <span class="chip">OpenCV</span>
+          <span class="chip">HSV</span>
+          <span class="chip">Background Subtraction</span>
+          <span class="chip">Contours</span>
+          <span class="chip">HOG + SVM opcional</span>
+          <span class="chip">Kalman Filter</span>
+          <span class="chip">Hungarian Algorithm</span>
+          <span class="chip">Homography</span>
+          <span class="chip">Heatmaps</span>
+          <span class="chip">Voronoi</span>
+          <span class="chip">HTML/CSS/JS</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="conclusion">
+      <div class="page-shell">
+        <div class="conclusion reveal">
+          <p>El proyecto transforma detecciones manuales en información táctica útil para la toma de decisiones deportivas.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="page-shell">Proyecto académico · Visión por computador clásica · Análisis táctico de fútbol</div>
+  </footer>
+
+  <script>
+    // Menú responsive y cierre automático al navegar.
+    const menuToggle = document.querySelector(".menu-toggle");
+    const navLinks = document.querySelector("#navLinks");
+
+    menuToggle.addEventListener("click", () => {
+      const isOpen = navLinks.classList.toggle("open");
+      menuToggle.setAttribute("aria-expanded", String(isOpen));
+    });
+
+    navLinks.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => {
+        navLinks.classList.remove("open");
+        menuToggle.setAttribute("aria-expanded", "false");
+      });
+    });
+
+    // Animaciones suaves de aparición al entrar en viewport.
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.14 });
+
+    document.querySelectorAll(".reveal").forEach((element) => {
+      revealObserver.observe(element);
+    });
+
+    // Contador visual para reforzar la lectura de simulación procesando frames.
+    const frameCounter = document.querySelector("#frameCounter");
+    let currentFrame = 248;
+
+    window.setInterval(() => {
+      currentFrame = currentFrame >= 420 ? 248 : currentFrame + 1;
+      frameCounter.textContent = `Frame ${String(currentFrame).padStart(4, "0")}`;
+    }, 160);
+  </script>
+</body>
+</html>
